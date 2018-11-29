@@ -15,7 +15,7 @@ namespace UnityUtils
 
         private static readonly string DefaultCompanyName = "Omer";
 
-        [MenuItem("Window/Extensions/Initialize Project")]
+        [MenuItem("Window/Unity Utils/Initialize Project")]
         public static void InitializeProject()
         {
             CreateDirectories();
