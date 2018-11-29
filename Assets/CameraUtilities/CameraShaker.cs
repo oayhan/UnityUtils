@@ -122,8 +122,6 @@ public class CameraShaker : MonoBehaviour
         //reset transform back to original values
         transform.localPosition = originalPosition;
         transform.localRotation = originalRotation;
-
-        
     }
 
     private void Update()
@@ -131,26 +129,32 @@ public class CameraShaker : MonoBehaviour
         if (!IsShaking)
             return;
 
+        //how much the shake strength will be dampened
         float dampenRate = 1;
 
         if (IsTimedShake)
         {
+            //count elapsed time
             ElapsedShakeDuration += Time.deltaTime;
+            
+            //apply dampen after the threshold is passed
             if (ElapsedShakeDuration / ShakeDuration > DampenRatio)
                 dampenRate = Mathf.Clamp01(1 - ElapsedShakeDuration / ShakeDuration);
             
+            //if shake duration is passed, stop the shake
             if(ElapsedShakeDuration >= ShakeDuration)
                 StopShaking();
         }
 
+        //calculate each shake separately
         float xPosShake = Random.Range(-1, 1) * PositionalShakeStrength.x;
         float yPosShake = Random.Range(-1, 1) * PositionalShakeStrength.y;
         float zPosShake = Random.Range(-1, 1) * PositionalShakeStrength.z;
-
         float xRotShake = Random.Range(-1, 1) * RotationalShakeStrength.x;
         float yRotShake = Random.Range(-1, 1) * RotationalShakeStrength.y;
         float zRotShake = Random.Range(-1, 1) * RotationalShakeStrength.z;
 
+        //apply shakes
         transform.localPosition = new Vector3(xPosShake, yPosShake, zPosShake) * dampenRate;
         transform.localRotation = Quaternion.Euler(new Vector3(xRotShake, yRotShake, zRotShake) * dampenRate);
     }
