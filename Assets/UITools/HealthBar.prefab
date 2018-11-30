@@ -164,14 +164,16 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
+  followTransform: {fileID: 0}
+  positionalOffset: {x: 0, y: 1, z: 0}
   scaleChange: {x: 1.2, y: 1.2, z: 1}
   scaleIncreaseDuration: 0.1
   scaleDereaseDuration: 0.1
   flashColor: {r: 1, g: 1, b: 1, a: 1}
   flashDuration: 0.1
   lostHpColorMultiplier: 0.7
-  lostHpFadeDelay: 0.2
-  lostHpFadeDuration: 0.2
+  lostHpFadeDelay: 0.6
+  lostHpFadeDuration: 0.4
 --- !u!114 &114273118700794470
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,7 +198,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.73
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
 --- !u!114 &114359729527591344
@@ -223,7 +225,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.6
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
 --- !u!114 &114744536021181874
@@ -297,7 +299,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -32, y: -30}
+  m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224264470256716474
 RectTransform:
@@ -316,8 +318,8 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -373,5 +375,5 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -32, y: -30}
+  m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}

@@ -15,6 +15,12 @@ public class HealthBar : MonoBehaviour
     private Gradient healthGradient;
 
     [SerializeField]
+    private Transform followTransform;
+    
+    [SerializeField]
+    private Vector3 positionalOffset;
+
+    [SerializeField]
     private Vector3 scaleChange = Vector3.one;
 
     [SerializeField]
@@ -49,11 +55,13 @@ public class HealthBar : MonoBehaviour
     private int latestChangeAmount;
     private float latestChangePercentage;
 
+    private RectTransform parentCanvasTransform;
     private RectTransform rectTransform;
     
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
+        parentCanvasTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
     }
     
     public void SetMaxHealth(int maxHealth)
@@ -136,5 +144,34 @@ public class HealthBar : MonoBehaviour
     private void SetFillColor()
     {
         currentHpFill.color = healthGradient.Evaluate(currentHealthPercentage);
+    }
+
+    private void LateUpdate()
+    {
+        if (followTransform == null)
+            return;
+
+        if (Camera.current == null)
+            return;
+        
+        // Translate our anchored position into world space.
+        Vector3 worldPoint = followTransform.TransformPoint(positionalOffset);
+
+        // Translate the world position into viewport space.
+        Vector3 viewportPoint = Camera.main.WorldToViewportPoint(worldPoint);
+
+        // Canvas local coordinates are relative to its center, 
+        // so we offset by half. We also discard the depth.
+        viewportPoint -= 0.5f * Vector3.one; 
+        viewportPoint.z = 0;
+
+        // Scale our position by the canvas size, 
+        // so we line up regardless of resolution & canvas scaling.
+        Rect rect = parentCanvasTransform.rect;
+        viewportPoint.x *= rect.width;
+        viewportPoint.y *= rect.height;
+
+        // Add the canvas space offset and apply the new position.
+        transform.localPosition = viewportPoint;
     }
 }
