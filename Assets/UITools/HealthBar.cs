@@ -54,7 +54,7 @@ public class HealthBar : MonoBehaviour
     //seconds before health change bar tween starts
     [SerializeField]
     [Range(0, 1)]
-    private float lostHpFadeDelay = 0.05f;
+    private float lostHpWaitTime = 0.05f;
 
     //how long the health change bar tween takes
     [SerializeField]
@@ -67,6 +67,7 @@ public class HealthBar : MonoBehaviour
     private float currentHealthPercentage;
     private int latestChangeAmount;
     private float latestChangePercentage;
+    private float latestChangeTime;
 
     //cached transforms
     private RectTransform parentCanvasTransform;
@@ -101,10 +102,11 @@ public class HealthBar : MonoBehaviour
         StopAllCoroutines();
         
         //set hp change variables
-        latestChangeAmount = changeAmount;
+        latestChangeAmount += changeAmount;
         latestChangePercentage = Mathf.Abs((float) latestChangeAmount / maxHealth);
         currentHealth = currentAmount;
         currentHealthPercentage = (float) currentHealth / maxHealth;
+        latestChangeTime = Time.timeSinceLevelLoad;
 
         //set fill amount for current HP
         currentHpFill.fillAmount = currentHealthPercentage;
@@ -166,8 +168,15 @@ public class HealthBar : MonoBehaviour
         hpChangeFill.fillAmount = currentHealthPercentage + latestChangePercentage;
         hpChangeFill.color = healthGradient.Evaluate(currentHealthPercentage) * lostHpColorMultiplier;
 
-        yield return new WaitForSeconds(lostHpFadeDelay);
+        yield return new WaitForSeconds(lostHpWaitTime);
+//        while (Time.timeSinceLevelLoad - latestChangeTime < lostHpWaitTime)
+//        {
+//            yield return null;
+//        }
 
+        //reset latest change amount
+        latestChangeAmount = 0;
+        
         //start disappear tween
         float elapsedTime = 0;
         while (elapsedTime < lostHpFadeDuration)
