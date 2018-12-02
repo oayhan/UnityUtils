@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,6 +62,12 @@ public class HealthBar : MonoBehaviour
     [Range(0, 1)]
     private float lostHpFadeDuration = 0.1f;
 
+    [SerializeField]
+    private bool useHealthText = true;
+    
+    [SerializeField]
+    private TMP_Text healthText;
+
     //hp variables
     private int maxHealth;
     private int currentHealth;
@@ -77,6 +84,9 @@ public class HealthBar : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         parentCanvasTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        
+        if(!useHealthText)
+            healthText.gameObject.SetActive(false);
     }
     
     /// <summary>
@@ -98,6 +108,9 @@ public class HealthBar : MonoBehaviour
     /// <param name="cancelAnimations">Set true to skip animations (flash, scale, etc..)</param>
     public void HealthChange(int changeAmount, int currentAmount, bool cancelAnimations = false)
     {
+        if (currentAmount < 0)
+            return;
+        
         //stop animations from previous change
         StopAllCoroutines();
         
@@ -108,6 +121,10 @@ public class HealthBar : MonoBehaviour
         currentHealthPercentage = (float) currentHealth / maxHealth;
         latestChangeTime = Time.timeSinceLevelLoad;
 
+        //set health text
+        if(useHealthText)
+            healthText.text = currentHealth.ToString();
+        
         //set fill amount for current HP
         currentHpFill.fillAmount = currentHealthPercentage;
         
@@ -169,10 +186,6 @@ public class HealthBar : MonoBehaviour
         hpChangeFill.color = healthGradient.Evaluate(currentHealthPercentage) * lostHpColorMultiplier;
 
         yield return new WaitForSeconds(lostHpWaitTime);
-//        while (Time.timeSinceLevelLoad - latestChangeTime < lostHpWaitTime)
-//        {
-//            yield return null;
-//        }
 
         //reset latest change amount
         latestChangeAmount = 0;
