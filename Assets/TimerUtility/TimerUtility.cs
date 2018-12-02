@@ -3,98 +3,104 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerUtility : MonoBehaviour
+namespace UnityUtils
 {
-    //singleton instance
-    public static TimerUtility Instance { get; private set; }
-
-    //elapsed time for timer in seconds
-    public float ElapsedTimerSeconds { get; private set; }
-    
-    //total duration for countdown
-    public float CountdownDuration { get; private set; }
-    //currently elapsed seconds for countdown
-    public float ElapsedCountdownSeconds { get; private set; }
-    //remaining seconds for countdown
-    public float RemainingCountdownSeconds
+    public class TimerUtility : MonoBehaviour
     {
-        get { return Mathf.Max(CountdownDuration - ElapsedCountdownSeconds, 0); }
-    }
+        //singleton instance
+        public static TimerUtility Instance { get; private set; }
 
-    //is timer counting down
-    public bool IsCountdownActive { get; private set; }
-    //is timer active
-    public bool IsTimerActive { get; private set; }
-    
-    //callback function when countdown is finished
-    private Action countdownFinishCallback;
-    
-    private void Awake()
-    {
-        //check for singleton component
-        if (Instance != null && Instance != this)
+        //elapsed time for timer in seconds
+        public float ElapsedTimerSeconds { get; private set; }
+
+        //total duration for countdown
+        public float CountdownDuration { get; private set; }
+
+        //currently elapsed seconds for countdown
+        public float ElapsedCountdownSeconds { get; private set; }
+
+        //remaining seconds for countdown
+        public float RemainingCountdownSeconds
         {
-            Debug.LogError("There are two TimerUtility scripts in scene!");
-            enabled = false;
-            return;
+            get { return Mathf.Max(CountdownDuration - ElapsedCountdownSeconds, 0); }
         }
 
-        Instance = this;
-    }
+        //is timer counting down
+        public bool IsCountdownActive { get; private set; }
 
-    /// <summary>
-    /// Starts countdown timer and invokes callback when finished.
-    /// </summary>
-    /// <param name="seconds"></param>
-    /// <param name="finishCallback"></param>
-    public void StartCountdown(int seconds, Action finishCallback)
-    {
-        CountdownDuration = seconds;
-        ElapsedCountdownSeconds = 0;
-        IsCountdownActive = true;
-        countdownFinishCallback = finishCallback;
-    }
-    
-    /// <summary>
-    /// Resets previous elapsed seconds and starts a new timer.
-    /// </summary>
-    public void StartTimer()
-    {
-        ElapsedTimerSeconds = 0;
-        IsTimerActive = true;
-    }
+        //is timer active
+        public bool IsTimerActive { get; private set; }
 
-    /// <summary>
-    /// Stops timer.
-    /// </summary>
-    public void StopTimer()
-    {
-        IsTimerActive = false;
-    }
+        //callback function when countdown is finished
+        private Action countdownFinishCallback;
 
-    private void Update()
-    {
-        if (IsCountdownActive)
+        private void Awake()
         {
-            //increment countdown seconds (capped at total duration)
-            ElapsedCountdownSeconds = Mathf.Min(ElapsedCountdownSeconds + Time.deltaTime, CountdownDuration);
-
-            //the countdown is finished
-            if (ElapsedCountdownSeconds >= CountdownDuration)
+            //check for singleton component
+            if (Instance != null && Instance != this)
             {
-                IsCountdownActive = false;
-                
-                if(countdownFinishCallback != null)
-                    countdownFinishCallback();
-
-                countdownFinishCallback = null;
+                Debug.LogError("There are two TimerUtility scripts in scene!");
+                enabled = false;
+                return;
             }
+
+            Instance = this;
         }
 
-        if (IsTimerActive)
+        /// <summary>
+        /// Starts countdown timer and invokes callback when finished.
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <param name="finishCallback"></param>
+        public void StartCountdown(int seconds, Action finishCallback)
         {
-            //increment timer seconds
-            ElapsedTimerSeconds += Time.deltaTime;
+            CountdownDuration = seconds;
+            ElapsedCountdownSeconds = 0;
+            IsCountdownActive = true;
+            countdownFinishCallback = finishCallback;
+        }
+
+        /// <summary>
+        /// Resets previous elapsed seconds and starts a new timer.
+        /// </summary>
+        public void StartTimer()
+        {
+            ElapsedTimerSeconds = 0;
+            IsTimerActive = true;
+        }
+
+        /// <summary>
+        /// Stops timer.
+        /// </summary>
+        public void StopTimer()
+        {
+            IsTimerActive = false;
+        }
+
+        private void Update()
+        {
+            if (IsCountdownActive)
+            {
+                //increment countdown seconds (capped at total duration)
+                ElapsedCountdownSeconds = Mathf.Min(ElapsedCountdownSeconds + Time.deltaTime, CountdownDuration);
+
+                //the countdown is finished
+                if (ElapsedCountdownSeconds >= CountdownDuration)
+                {
+                    IsCountdownActive = false;
+
+                    if (countdownFinishCallback != null)
+                        countdownFinishCallback();
+
+                    countdownFinishCallback = null;
+                }
+            }
+
+            if (IsTimerActive)
+            {
+                //increment timer seconds
+                ElapsedTimerSeconds += Time.deltaTime;
+            }
         }
     }
 }
