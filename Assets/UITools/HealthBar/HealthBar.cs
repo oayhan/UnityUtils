@@ -62,9 +62,11 @@ public class HealthBar : MonoBehaviour
     [Range(0, 1)]
     private float lostHpFadeDuration = 0.1f;
 
+    //display health value as text
     [SerializeField]
     private bool useHealthText = true;
     
+    //text component for displaying health value
     [SerializeField]
     private TMP_Text healthText;
 
