@@ -6,6 +6,7 @@
 Assets/AssetStoreTools*
 Assets/Plugins/
 Assets/TextMesh Pro/
+Assets/Test/
 
 # Visual Studio cache directory
 .vs/
@@ -51,3 +52,6 @@ Assets/Test.cs.meta
 Assets/Test.unity
 Assets/Test.unity.meta
 Assets/TextMesh Pro.meta
+Assets/Resources/DOTweenSettings.asset
+Assets/Resources/DOTweenSettings.asset.meta
+Assets/Test.meta
