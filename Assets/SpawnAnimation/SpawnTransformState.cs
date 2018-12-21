@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace UnityUtils
 {
+    /// <summary>
+    /// Wrapper class for spawn animation variables
+    /// </summary>
     [Serializable]
     public class SpawnTransformState
     {

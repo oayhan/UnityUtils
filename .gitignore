@@ -4,8 +4,8 @@
 [Bb]uild/
 [Bb]uilds/
 Assets/AssetStoreTools*
+Assets/Packages/
 Assets/Plugins/
-Assets/TextMesh Pro/
 Assets/Test/
 
 # Visual Studio cache directory
@@ -47,11 +47,6 @@ Assets/Plugins.meta
 .idea/
 ProjectSettings/
 Packages/
-Assets/Test.cs
-Assets/Test.cs.meta
-Assets/Test.unity
-Assets/Test.unity.meta
-Assets/TextMesh Pro.meta
 Assets/Resources/DOTweenSettings.asset
 Assets/Resources/DOTweenSettings.asset.meta
 Assets/Test.meta

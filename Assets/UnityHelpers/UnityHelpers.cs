@@ -97,5 +97,59 @@ namespace UnityUtils
 
             return randomVector;
         }
+
+        /// <summary>
+        /// Returns value for a PlayerPref key. If the key isn't found, sets default value (0 for int) and returns it.
+        /// </summary>
+        /// <param name="playerPrefKey"></param>
+        /// <returns></returns>
+        public static int GetPlayerPrefsIntOrDefault(string playerPrefKey)
+        {
+            if (PlayerPrefs.HasKey(playerPrefKey))
+            {
+                return PlayerPrefs.GetInt(playerPrefKey);
+            }
+            else
+            {
+                PlayerPrefs.SetInt(playerPrefKey, 0);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns value for a PlayerPref key. If the key isn't found, sets default value ("" for string) and returns it.
+        /// </summary>
+        /// <param name="playerPrefKey"></param>
+        /// <returns></returns>
+        public static string GetPlayerPrefsStringOrDefault(string playerPrefKey)
+        {
+            if (PlayerPrefs.HasKey(playerPrefKey))
+            {
+                return PlayerPrefs.GetString(playerPrefKey);
+            }
+            else
+            {
+                PlayerPrefs.GetString(playerPrefKey, "");
+                return "";
+            }
+        }
+        
+        /// <summary>
+        /// Returns value for a PlayerPref key. If the key isn't found, sets default value (0 for int) and returns it.
+        /// </summary>
+        /// <param name="playerPrefKey"></param>
+        /// <returns></returns>
+        public static float GetPlayerPrefsFloatOrDefault(string playerPrefKey)
+        {
+            if (PlayerPrefs.HasKey(playerPrefKey))
+            {
+                return PlayerPrefs.GetFloat(playerPrefKey);
+            }
+            else
+            {
+                PlayerPrefs.GetFloat(playerPrefKey, 0);
+                return 0;
+            }
+        }
     }
 }

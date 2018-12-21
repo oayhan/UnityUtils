@@ -8,6 +8,7 @@ namespace UnityUtils
 {
     public class SpawnAnimatorGroup : MonoBehaviour
     {
+        
         [SerializeField]
         private bool useRandomParameters = true;
 
@@ -17,14 +18,20 @@ namespace UnityUtils
         [SerializeField]
         private AnimatorRangeParameter lowerParameters;
 
+        //cached SpawnAnimator components
         private SpawnAnimator[] spawnAnimators;
 
+        /// <summary>
+        /// Starts spawn animation for this group. Finds all SpawnAnimator components in child objects and triggers their spawn animation.
+        /// </summary>
         public void StartAnimation()
         {
+            //find all children
             spawnAnimators = GetComponentsInChildren<SpawnAnimator>(true);
 
             foreach (SpawnAnimator spawnAnimator in spawnAnimators)
             {
+                //if true, assign random spawn parameters to each SpawnAnimator
                 if (useRandomParameters)
                 {
                     SpawnTransformState[] states = new[]
@@ -32,16 +39,22 @@ namespace UnityUtils
                     spawnAnimator.SetTransformStates(states);
                 }
                 
+                //start spawn animation
                 spawnAnimator.StartSpawnSequence();
             }
         }
 
+        //wrapper class for random spawn animation parameters (min/max ranges for spawn states)
         [Serializable]
         class AnimatorRangeParameter
         {
             public SpawnTransformState MinValue;
             public SpawnTransformState MaxValue;
 
+            /// <summary>
+            /// Returns a SpawnTransformState with random values between MinValue and MaxValue.
+            /// </summary>
+            /// <returns></returns>
             public SpawnTransformState GetRandomSpawnTransformState()
             {
                 SpawnTransformState randomState = new SpawnTransformState
