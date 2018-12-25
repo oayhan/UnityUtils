@@ -81,8 +81,12 @@ public class BezierSpline : MonoBehaviour
 
     public void AddNewPoint()
     {
-        //BezierPoint newPoint = new BezierPoint();
-        
+        BezierPoint lastPoint = Points[Points.Length - 1];
+
+        BezierPoint newPoint = new BezierPoint(this, lastPoint.Position + lastPoint.OutgoingTangent.normalized,
+            lastPoint.IncomingTangent, lastPoint.OutgoingTangent, lastPoint, null);
+        Array.Resize(ref Points, Points.Length + 1);
+        Points[Points.Length - 1] = newPoint;
     }
 
     private void Reset()

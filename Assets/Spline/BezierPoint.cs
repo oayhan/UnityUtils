@@ -17,14 +17,7 @@ public class BezierPoint
         {
             handle = value;
 
-            if (handle == HandleMode.Linear)
-            {
-                
-            }
-            else if (handle == HandleMode.Mirrored)
-            {
-                
-            }
+            RepositionTangents();
         }
     }
     private HandleMode handle;
@@ -32,7 +25,15 @@ public class BezierPoint
     public Vector3 IncomingTangent
     {
         get { return incomingTangent; }
-        set { incomingTangent = value; }//todo: check values before setting (handle mode etc..)
+        set
+        {
+            incomingTangent = value;
+
+            if (handle == HandleMode.Mirrored)
+            {
+                outgoingTangent = -incomingTangent;
+            }
+        }
     }
     private Vector3 incomingTangent;
 
@@ -45,7 +46,15 @@ public class BezierPoint
     public Vector3 OutgoingTangent
     {
         get { return outgoingTangent; }
-        set { outgoingTangent = value; }//todo: check values before setting (handle mode etc..)
+        set
+        {
+            outgoingTangent = value;
+
+            if (handle == HandleMode.Mirrored)
+            {
+                incomingTangent = -outgoingTangent;
+            }
+        }
     }
     private Vector3 outgoingTangent;
 
@@ -73,7 +82,12 @@ public class BezierPoint
         OutgoingTangent = outTangent;
 
         PreviousPoint = prevPoint;
+        if (PreviousPoint != null)
+            PreviousPoint.NextPoint = this;
+        
         NextPoint = nextPoint;
+        if (NextPoint != null)
+            NextPoint.PreviousPoint = this;
     }
 
     public void RepositionTangents()

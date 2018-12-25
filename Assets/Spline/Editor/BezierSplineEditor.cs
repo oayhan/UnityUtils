@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CustomEditor(typeof(BezierSpline))]
 public class BezierSplineEditor : Editor
@@ -25,13 +26,31 @@ public class BezierSplineEditor : Editor
         if (spline == null)
             return;
 
-//        if (GUILayout.Button("Add Curve"))
-//        {
-//            Undo.RecordObject(spline, "Add Curve");
-//            EditorUtility.SetDirty(spline);
-//            spline.AddCurve();
-//        }
+        //show reorderable list
+
+        if (GUILayout.Button("Add Point"))
+        {
+            Undo.RecordObject(spline, "Add Curve");
+            EditorUtility.SetDirty(spline);
+            spline.AddNewPoint();
+        }
+
+        //show selected node values
+        if (spline.Points[selectedPointIndex] != null)
+        {
+            EditorGUI.BeginChangeCheck();
+            BezierPoint.HandleMode handleType = (BezierPoint.HandleMode) EditorGUILayout.EnumPopup("Tangent Handle",
+                spline.Points[selectedPointIndex].Handle);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(spline, "Handle Change");
+                EditorUtility.SetDirty(spline);
+                
+                spline.Points[selectedPointIndex].Handle = handleType;
+            }
+        }
     }
+
 
     private void OnSceneGUI()
     {
@@ -49,8 +68,9 @@ public class BezierSplineEditor : Editor
     {
         for (int i = 0; i < spline.Points.Length - 1; i++)
         {
-            Handles.DrawBezier(spline.Points[i].Position, spline.Points[i + 1].Position,
-                spline.Points[i].OutgoingTangent, spline.Points[i + 1].IncomingTangent, Color.white, null, 2f);
+            Handles.DrawBezier(spline.Points[i].WorldPosition, spline.Points[i + 1].WorldPosition,
+                spline.Points[i].OutgoingTangentWorldPos, spline.Points[i + 1].IncomingTangentWorldPos, Color.white,
+                null, 2f);
         }
     }
 
@@ -64,30 +84,40 @@ public class BezierSplineEditor : Editor
 
     private void ShowBezierPoint(int index)
     {
-        Handles.color = Color.white;
         float size = HandleUtility.GetHandleSize(spline.Points[index].WorldPosition);
 
+        Handles.color = Color.gray;
         Handles.DrawLine(spline.Points[index].WorldPosition, spline.Points[index].IncomingTangentWorldPos);
-        if (Handles.Button(spline.Points[index].IncomingTangentWorldPos, Quaternion.identity, HandleSize * size, PickSize * size,
+
+        Handles.color = Color.white;
+        if (Handles.Button(spline.Points[index].IncomingTangentWorldPos, Quaternion.identity, HandleSize * size,
+            PickSize * size,
             Handles.DotHandleCap))
         {
             selectedPointIndex = index;
             handleSelection = SplineEditorSelection.IncomingTangentHandle;
+            Repaint();
         }
-        
+
         if (Handles.Button(spline.Points[index].WorldPosition, Quaternion.identity, HandleSize * size, PickSize * size,
             Handles.DotHandleCap))
         {
             selectedPointIndex = index;
             handleSelection = SplineEditorSelection.PositionHandle;
+            Repaint();
         }
-        
+
+        Handles.color = Color.gray;
         Handles.DrawLine(spline.Points[index].WorldPosition, spline.Points[index].OutgoingTangentWorldPos);
-        if (Handles.Button(spline.Points[index].OutgoingTangentWorldPos, Quaternion.identity, HandleSize * size, PickSize * size,
+
+        Handles.color = Color.white;
+        if (Handles.Button(spline.Points[index].OutgoingTangentWorldPos, Quaternion.identity, HandleSize * size,
+            PickSize * size,
             Handles.DotHandleCap))
         {
             selectedPointIndex = index;
             handleSelection = SplineEditorSelection.OutgoingTangentHandle;
+            Repaint();
         }
 
         if (selectedPointIndex == index)
@@ -97,77 +127,26 @@ public class BezierSplineEditor : Editor
                 handlePos = spline.Points[index].IncomingTangentWorldPos;
             else if (handleSelection == SplineEditorSelection.OutgoingTangentHandle)
                 handlePos = spline.Points[index].OutgoingTangentWorldPos;
-            
+
             Quaternion handleRot =
                 Tools.pivotRotation == PivotRotation.Local ? splineTransform.rotation : Quaternion.identity;
-            
+
             EditorGUI.BeginChangeCheck();
             handlePos = Handles.DoPositionHandle(handlePos, handleRot);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(spline, "Spline Point Change");
                 EditorUtility.SetDirty(spline);
-                
-                if(handleSelection == SplineEditorSelection.PositionHandle)
+
+                if (handleSelection == SplineEditorSelection.PositionHandle)
                     spline.Points[index].WorldPosition = handlePos;
-                else if(handleSelection == SplineEditorSelection.IncomingTangentHandle)
+                else if (handleSelection == SplineEditorSelection.IncomingTangentHandle)
                     spline.Points[index].IncomingTangentWorldPos = handlePos;
-                else if(handleSelection == SplineEditorSelection.OutgoingTangentHandle)
+                else if (handleSelection == SplineEditorSelection.OutgoingTangentHandle)
                     spline.Points[index].OutgoingTangentWorldPos = handlePos;
             }
         }
     }
-
-//
-//    private const int stepsPerCurve = 10;
-//
-//    private void ShowDirections()
-//    {
-//        Handles.color = Color.green;
-//        Vector3 point = spline.GetPoint(0f);
-//        Handles.DrawLine(point, point + spline.GetDirection(0f) * 1);
-//        int steps = stepsPerCurve * spline.CurveCount;
-//        for (int i = 1; i <= steps; i++)
-//        {
-//            point = spline.GetPoint(i / (float) steps);
-//            Handles.DrawLine(point, point + spline.GetDirection(i / (float) steps) * 1);
-//        }
-//    }
-//
-//    private void ShowPoints()
-//    {
-//        for (int i = 0; i < spline.Points.Length; i++)
-//        {
-//            ShowPoint(i);
-//        }
-//    }
-//
-//    private Vector3 ShowPoint(int pointIndex)
-//    {
-//        Vector3 handlePos = splineTransform.TransformPoint(spline.Points[pointIndex]);
-//        Quaternion handleRot = rotationMode == PivotRotation.Local ? splineTransform.rotation : Quaternion.identity;
-//
-//        Handles.color = Color.white;
-//        float size = HandleUtility.GetHandleSize(handlePos);
-//        if (Handles.Button(handlePos, handleRot, size * handleSize, size * pickSize, Handles.DotHandleCap))
-//        {
-//            selectedIndex = pointIndex;
-//        }
-//
-//        if (selectedIndex == pointIndex)
-//        {
-//            EditorGUI.BeginChangeCheck();
-//            handlePos = Handles.DoPositionHandle(handlePos, handleRot);
-//            if (EditorGUI.EndChangeCheck())
-//            {
-//                Undo.RecordObject(spline, "Spline Point Change");
-//                EditorUtility.SetDirty(spline);
-//                spline.Points[pointIndex] = splineTransform.InverseTransformPoint(handlePos);
-//            }
-//        }
-//
-//        return handlePos;
-//    }
 
     public enum SplineEditorSelection
     {
