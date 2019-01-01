@@ -537,5 +537,97 @@ namespace UnityUtils
         }
 
         #endregion
+        
+        #region String
+
+        /// <summary>
+        /// Returns true if the string is either null or empty.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsNullOrEmpty(this string str)
+        {
+            return string.IsNullOrEmpty(str);
+        }
+        
+        #endregion
+        
+        #region Audio
+        
+        /// <summary>
+        /// Instantiates a new GameObject with an AudioSource attached. After playing the clip, the GameObject is destroyed.
+        /// </summary>
+        /// <param name="clip"></param>
+        public static void PlayOneShot(this AudioClip clip)
+        {
+            //create a new GameObject
+            GameObject newAudioObject = new GameObject("OneShotAudio");
+            //attach an AudioSource
+            AudioSource newAudioSource = newAudioObject.AddComponent<AudioSource>();
+            //set the clip and play it
+            newAudioSource.clip = clip;
+            newAudioSource.Play();
+            
+            //destroy the GameObject when audio is done
+            UnityEngine.Object.Destroy(newAudioObject, clip.length);
+        }
+        
+        #endregion
+        
+        #region Color
+
+        /// <summary>
+        /// Returns the color with new "r" value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public static Color WithR(this Color color, float r)
+        {
+            color.r = r;
+
+            return color;
+        }
+        
+        /// <summary>
+        /// Returns the color with new "g" value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public static Color WithG(this Color color, float g)
+        {
+            color.g = g;
+
+            return color;
+        }
+        
+        /// <summary>
+        /// Returns the color with new "b" value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Color WithB(this Color color, float b)
+        {
+            color.b = b;
+
+            return color;
+        }
+        
+        /// <summary>
+        /// Returns the color with new "a" value.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static Color WithA(this Color color, float a)
+        {
+            color.a = a;
+
+            return color;
+        }
+        
+        #endregion
     }
 }
