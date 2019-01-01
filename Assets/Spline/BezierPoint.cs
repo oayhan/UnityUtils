@@ -39,7 +39,7 @@ public class BezierPoint
 
     public Vector3 IncomingTangentWorldPos
     {
-        get { return Position + incomingTangent; }
+        get { return WorldPosition + incomingTangent; }
         set { IncomingTangent = value - Position; }
     }
 
@@ -60,7 +60,7 @@ public class BezierPoint
 
     public Vector3 OutgoingTangentWorldPos
     {
-        get { return Position + outgoingTangent; }
+        get { return WorldPosition + outgoingTangent; }
         set { OutgoingTangent = value - Position; }
     }
 
