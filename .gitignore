@@ -50,3 +50,4 @@ Packages/
 Assets/Resources/DOTweenSettings.asset
 Assets/Resources/DOTweenSettings.asset.meta
 Assets/Test.meta
+*.DS_Store
