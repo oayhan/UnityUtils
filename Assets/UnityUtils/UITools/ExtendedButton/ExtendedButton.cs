@@ -318,6 +318,7 @@ public class ExtendedButton : MonoBehaviour, IPointerClickHandler, IPointerDownH
         }
     }
     
+    #if UNITY_EDITOR
     //default values for fields
     private void Reset()
     {
@@ -389,6 +390,7 @@ public class ExtendedButton : MonoBehaviour, IPointerClickHandler, IPointerDownH
         //add ExtendedButton
         extendedButtonObject.AddComponent<ExtendedButton>();
     }
+    #endif
     
     public enum ExtendedButtonState
     {
