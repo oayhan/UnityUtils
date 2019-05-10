@@ -51,7 +51,6 @@ namespace UnityUtils
             }
         }
 
-
         #endregion
 
         #region 3D Colliders
@@ -187,6 +186,13 @@ namespace UnityUtils
         public Renderer Renderer
         {
             get { return rendererComponent ? rendererComponent : (rendererComponent = GetComponent<Renderer>()); }
+        }
+
+        private SpriteRenderer spriteRenderer;
+
+        public SpriteRenderer SpriteRenderer
+        {
+            get { return spriteRenderer ? spriteRenderer : (spriteRenderer = GetComponent<SpriteRenderer>()); }
         }
 
         private Light lightComponent;
